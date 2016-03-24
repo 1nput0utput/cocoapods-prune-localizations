@@ -12,6 +12,10 @@ module CocoapodsPruneLocalizations
     
     def self.user_options(context, orig_user_opts = {})
       user_options = {}
+      if orig_user_opts["shoud_prune_bundle"] 
+        user_options["shoud_prune_bundle"] = true
+      end
+      
       if orig_user_opts["localizations"]
         user_options["localizations"] = orig_user_opts["localizations"].map do |loc|
           if loc.end_with? ".lproj"
@@ -161,7 +165,7 @@ module CocoapodsPruneLocalizations
           else
             changed_bundle = true
           end
-        elsif file_name.end_with? ".bundle"
+        elsif file_name.end_with? ".bundle" && user_options["should_prune_bundle"] == true
           sub_trimmed_bundle = self.trimmed_bundle(absolute_file_path)
           if sub_trimmed_bundle
             sub_bundle_path = File.join(tmp_dir, file_name)
